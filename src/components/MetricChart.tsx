@@ -15,6 +15,7 @@ import { dimensionLabel } from 'Constants/dimensionLabels'
 import { getMetric } from 'Constants/metricCatalog'
 import { StatusMessage } from 'Components/StatusMessage'
 import { formatValue } from 'Utils/format'
+import { toBarTotals, toLineRows } from 'Utils/chartData'
 import type { MetricUnit } from 'Constants/metricCatalog'
 import type { MetricSeries } from 'Types/analytics'
 
@@ -35,10 +36,6 @@ function axisLabel(metricKey: string, dim: string): string {
   return dimensionLabel(dim)
 }
 
-function isAllNumeric(dims: string[]): boolean {
-  return dims.length > 0 && dims.every((d) => /^\d+$/.test(d))
-}
-
 export function MetricChart({
   metricKey,
   series,
@@ -52,30 +49,11 @@ export function MetricChart({
 
   const hasData = series.some((s) => s.points.length > 0)
 
-  const lineData = useMemo(() => {
-    const byDate = new Map<string, Record<string, number | string>>()
-    for (const s of series) {
-      for (const p of s.points) {
-        const row = byDate.get(p.date) ?? { date: p.date }
-        row[s.dimension] = p.value
-        byDate.set(p.date, row)
-      }
-    }
-    return [...byDate.values()].sort((a, b) =>
-      String(a.date) < String(b.date) ? -1 : 1,
-    )
-  }, [series])
-
-  const barData = useMemo(() => {
-    const dims = series.map((s) => s.dimension)
-    const sorted = isAllNumeric(dims)
-      ? [...series].sort((a, b) => Number(a.dimension) - Number(b.dimension))
-      : series
-    return sorted.map((s) => ({
-      label: axisLabel(metricKey, s.dimension),
-      total: s.points.reduce((sum, p) => sum + p.value, 0),
-    }))
-  }, [series, metricKey])
+  const lineData = useMemo(() => toLineRows(series), [series])
+  const barData = useMemo(
+    () => toBarTotals(series, (dim) => axisLabel(metricKey, dim)),
+    [series, metricKey],
+  )
 
   const dims = useMemo(() => series.map((s) => s.dimension), [series])
   const tickFmt = (value: number) => formatValue(value, unit)
