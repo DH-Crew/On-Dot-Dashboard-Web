@@ -1,6 +1,8 @@
+import { Suspense } from 'react'
 import styled from 'styled-components'
 import { Outlet } from 'react-router-dom'
 import { AreaTabs } from 'Components/AreaTabs'
+import { StatusMessage } from 'Components/StatusMessage'
 import { useAuth } from 'Hooks/useAuth'
 
 export function Layout() {
@@ -15,7 +17,9 @@ export function Layout() {
       </Header>
       <AreaTabs />
       <Content>
-        <Outlet />
+        <Suspense fallback={<StatusMessage>불러오는 중…</StatusMessage>}>
+          <Outlet />
+        </Suspense>
       </Content>
     </Shell>
   )
