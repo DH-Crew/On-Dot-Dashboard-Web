@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client", "vitest/globals", "node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Path aliases (PascalCase, desk-web convention) */
+    "paths": {
+      "Api/*": ["./src/api/*"],
+      "Queries/*": ["./src/queries/*"],
+      "Features/*": ["./src/features/*"],
+      "Components/*": ["./src/components/*"],
+      "Hooks/*": ["./src/hooks/*"],
+      "Services/*": ["./src/services/*"],
+      "Constants/*": ["./src/constants/*"],
+      "Types/*": ["./src/types/*"],
+      "Utils/*": ["./src/utils/*"],
+      "Styles/*": ["./src/styles/*"],
+      "Mocks/*": ["./src/mocks/*"],
+      "Routes/*": ["./src/routes/*"]
+    },
+
+    /* Strictness */
+    "strict": true,
+    "noImplicitAny": false,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
